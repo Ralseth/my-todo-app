@@ -4,6 +4,18 @@ import TodoList from './components/TodoList';
 import { Todo } from './types';
 import './App.css';
 
+const getTaskWord = (count: number): string => {
+    const mod10 = count % 10;
+    const mod100 = count % 100;
+    if (mod100 >= 11 && mod100 <= 14) return 'Задач';
+    if (mod10 === 1) return 'Задача';
+    if (mod10 >= 2 && mod10 <= 4) return 'Задачи';
+    return 'Задач';
+};
+
+const getLeftWord = (count: number): string =>
+    count === 1 ? 'осталась' : 'осталось';
+
 const App: React.FC = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
@@ -14,43 +26,75 @@ const App: React.FC = () => {
     };
 
     const toggleTodo = (id: number) => {
-        setTodos(todos.map((todo) =>
-            todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        ));
+        setTodos(
+            todos.map(todo =>
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            )
+        );
     };
 
     const deleteTodo = (id: number) => {
-        setTodos(todos.filter((todo) => todo.id !== id));
+        setTodos(todos.filter(todo => todo.id !== id));
     };
 
     const clearCompleted = () => {
-        setTodos(todos.filter((todo) => !todo.completed));
+        setTodos(todos.filter(todo => !todo.completed));
     };
 
-    const remainingTasks = todos.filter((todo) => !todo.completed).length;
-
-    const filteredTodos = todos.filter((todo) => {
-        if (filter === 'active') return !todo.completed;
-        if (filter === 'completed') return todo.completed;
+    const remaining = todos.filter(t => !t.completed).length;
+    const filteredTodos = todos.filter(t => {
+        if (filter === 'active') return !t.completed;
+        if (filter === 'completed') return t.completed;
         return true;
     });
 
+    const hasCompleted = todos.some(t => t.completed);
+
     return (
         <div className="App">
-            <h1>todos</h1>
+            <h1>Список дел</h1>
             <TodoInput onAdd={addTodo} />
-            <h3>{remainingTasks} item{remainingTasks !== 1 ? 's' : ''} left</h3>
-            <TodoList todos={filteredTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
 
-            <div className="status-buttons">
-                <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button>
-                <button className={filter === 'active' ? 'active' : ''} onClick={() => setFilter('active')}>Active</button>
-                <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed</button>
+            <div className="controls">
+                <span className="remaining">
+                  {remaining} {getTaskWord(remaining)} {getLeftWord(remaining)}
+                </span>
+
+                <div className="status-buttons">
+                    <button
+                        className={filter === 'all' ? 'active' : ''}
+                        onClick={() => setFilter('all')}
+                    >
+                        Все
+                    </button>
+                    <button
+                        className={filter === 'active' ? 'active' : ''}
+                        onClick={() => setFilter('active')}
+                    >
+                        Активные
+                    </button>
+                    <button
+                        className={filter === 'completed' ? 'active' : ''}
+                        onClick={() => setFilter('completed')}
+                    >
+                        Выполненные
+                    </button>
+                </div>
+
+                {hasCompleted ? (
+                    <button className="clear-completed" onClick={clearCompleted}>
+                        Очистить выполненные
+                    </button>
+                ) : (
+                    <div style={{ width: '150px' }} /> /* пустышка, чтобы выровнять сетку */
+                )}
             </div>
 
-            {todos.some(todo => todo.completed) && (
-                <span className="clear-completed" onClick={clearCompleted}>Clear completed</span>
-            )}
+            <TodoList
+                todos={filteredTodos}
+                onToggle={toggleTodo}
+                onDelete={deleteTodo}
+            />
         </div>
     );
 };
