@@ -133,37 +133,137 @@ button:hover {
 /* Статусы */
 .status-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 20px;
 }
 
-.status-buttons button {
-  background-color: #ddd;
+/* Скрываем дефолтный вид радиокнопки */
+.radio-label input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d1a7a7;
+  border-radius: 50%;
+  margin-right: 8px;
+  position: relative;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* Заполняем кружок при выборе */
+.radio-label input[type="radio"]:checked::before {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: #d1a7a7;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+/* Подпись к радио */
+.radio-label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Активный лейбл подчёркиваем цветом текста */
+.status-buttons .radio-label input[type="radio"]:checked + span,
+.status-buttons .radio-label input[type="radio"]:checked ~ /*fallback*/ {
+  /* тут можно добавить стили для label при checked, если нужно */
+}
+.clear-completed {
+  margin-top: 20px;
   padding: 10px;
+  width: 100%;
+  background-color: #d1a7a7;
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.status-buttons button:hover {
-  background-color: #bbb;
-}
-
-.status-buttons button.active {
-  background-color: #d1a7a7;
-  color: white;
-}
-
-.clear-completed {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
   font-size: 1rem;
-  color: #555;
-  cursor: pointer;
 }
 
 .clear-completed:hover {
-  color: #d1a7a7;
+  background-color: #b57b7b;
+}
+
+/* Управление фильтрами и очисткой */
+.controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Оставшееся количество */
+.remaining {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Фильтры */
+.status-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Уменьшенные кнопки фильтра */
+.status-buttons button {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+}
+
+/* Активный фильтр */
+.status-buttons .active {
+  background-color: #d1a7a7;
+  color: #fff;
+}
+
+/* Кнопка очистки */
+.clear-completed {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background-color: #d1a7a7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.clear-completed:hover {
+  background-color: #b57b7b;
+}
+
+/* === Стилизация чекбоксов в списке задач === */
+li input[type="checkbox"] {
+  /* убираем дефолтный вид */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1a7a7;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+/* маркёр внутри при checked */
+li input[type="checkbox"]:checked::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background-color: #d1a7a7;
+  border-radius: 50%;
 }
